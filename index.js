@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware untuk mengurai data JSON
 app.use(express.json());
+app.use(express.static('public')); // Menambahkan middleware untuk melayani file statis
 
 // Koneksi ke MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -88,6 +89,11 @@ app.delete('/api/exercises/:id', (req, res) => {
     Exercise.findByIdAndDelete(req.params.id)
         .then(() => res.json('Exercise deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
+});
+
+// Rute untuk menangani permintaan GET ke root
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/index.html'); // Mengarahkan ke index.html
 });
 
 // Memulai server
